@@ -1,0 +1,36 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# docker-compose.yml  —  Local development environment
+#
+# Usage:
+#   1. Copy .env.example to .env and set your preferred passwords.
+#   2. docker compose up -d
+#   3. docker compose down          # stop containers (data volume preserved)
+#   4. docker compose down -v       # stop AND delete the data volume
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: event_platform_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       ${DB_NAME:-event_platform}
+      # Superuser (only used to bootstrap the DB).
+      # The application uses the dedicated DB_USERNAME account below.
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:-postgres_dev_only}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ${DB_NAME:-event_platform}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+volumes:
+  postgres_data:
+    name: event_platform_postgres_data
