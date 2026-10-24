@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface EventResultRepository extends JpaRepository<EventResult, UUID> {
 
     Optional<EventResult> findByEventId(UUID eventId);
+
+    boolean existsByEventId(UUID eventId);
 }

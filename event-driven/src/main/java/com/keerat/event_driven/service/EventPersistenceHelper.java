@@ -23,10 +23,14 @@ public class EventPersistenceHelper {
 
     private final EventRepository eventRepository;
     private final EventAuditLogRepository eventAuditLogRepository;
+    private final com.keerat.event_driven.config.RetryProperties retryProperties;
 
-    public EventPersistenceHelper(EventRepository eventRepository, EventAuditLogRepository eventAuditLogRepository) {
+    public EventPersistenceHelper(EventRepository eventRepository,
+                                  EventAuditLogRepository eventAuditLogRepository,
+                                  com.keerat.event_driven.config.RetryProperties retryProperties) {
         this.eventRepository = eventRepository;
         this.eventAuditLogRepository = eventAuditLogRepository;
+        this.retryProperties = retryProperties;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -41,6 +45,7 @@ public class EventPersistenceHelper {
             request.payload(),
             priority
         );
+        event.setMaxAttempts((short) retryProperties.getDefaultMaxAttempts());
         Event savedEvent = eventRepository.save(event);
 
         EventAuditLog auditLog = new EventAuditLog(

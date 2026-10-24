@@ -47,6 +47,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
+    @ExceptionHandler(InvalidEventStateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidEventState(InvalidEventStateException ex, HttpServletRequest request) {
+        ErrorResponse body = new ErrorResponse(
+            HttpStatus.CONFLICT.value(),
+            HttpStatus.CONFLICT.getReasonPhrase(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    @ExceptionHandler(StaleClaimException.class)
+    public ResponseEntity<ErrorResponse> handleStaleClaim(StaleClaimException ex, HttpServletRequest request) {
+        ErrorResponse body = new ErrorResponse(
+            HttpStatus.CONFLICT.value(),
+            HttpStatus.CONFLICT.getReasonPhrase(),
+            ex.getMessage(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> errors = new LinkedHashMap<>();

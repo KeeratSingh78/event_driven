@@ -61,6 +61,12 @@ public class Event {
     @Column(name = "last_failure_reason")
     private String lastFailureReason;
 
+    @Column(name = "claim_token")
+    private UUID claimToken;
+
+    @Column(name = "processing_lease_until")
+    private Instant processingLeaseUntil;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -178,6 +184,22 @@ public class Event {
 
     public void setLastFailureReason(String lastFailureReason) {
         this.lastFailureReason = lastFailureReason;
+    }
+
+    public UUID getClaimToken() {
+        return claimToken;
+    }
+
+    public void setClaimToken(UUID claimToken) {
+        this.claimToken = claimToken;
+    }
+
+    public Instant getProcessingLeaseUntil() {
+        return processingLeaseUntil;
+    }
+
+    public void setProcessingLeaseUntil(Instant processingLeaseUntil) {
+        this.processingLeaseUntil = processingLeaseUntil;
     }
 
     public Instant getCreatedAt() {

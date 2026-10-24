@@ -1,0 +1,9 @@
+# Root .gitignore
+.env
+*.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+target/
+*.log
